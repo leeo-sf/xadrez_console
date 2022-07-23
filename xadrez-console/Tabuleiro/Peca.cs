@@ -11,9 +11,9 @@
         // Toda peça está em um tabuleiro {pode ser acessada e alterada por ela mesmo ou por subclasses}
         public Tabuleiro tab { get; set; }
 
-        public Peca(Posicao posicao, Tabuleiro tab, Cor cor)
+        public Peca(Tabuleiro tab, Cor cor)
         {
-            this.posicao = posicao;
+            this.posicao = null;
             this.tab = tab;
             this.cor = cor;
             this.qtdMovimentos = 0;

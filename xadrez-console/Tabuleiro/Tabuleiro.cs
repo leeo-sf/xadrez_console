@@ -20,5 +20,12 @@
         {
             return this.pecas[linha, coluna];
         }
+
+        public void colocarPeca(Peca p, Posicao pos)
+        {
+            // Colocando a peca "p" na posição informada no parâmetro
+            this.pecas[pos.linha, pos.coluna] = p;
+            p.posicao = pos;
+        }
     }
 }
