@@ -21,11 +21,44 @@
             return this.pecas[linha, coluna];
         }
 
+        public Peca peca(Posicao pos)
+        {
+            return pecas[pos.linha, pos.coluna];
+        }
+
+        public bool existePeca(Posicao pos) // Checa se existe posição na determinada posição
+        {
+            this.validarPosicao(pos); // Caso de erro de validação de posição, irá levantar um erro
+            return this.peca(pos) != null;
+        }
+
         public void colocarPeca(Peca p, Posicao pos)
         {
+            if (this.existePeca(pos)) // Se existir peça na posição
+            {
+                // Levante o erro
+                throw new TabuleiroException("Já existe uma peça nessa posição!");
+            }
             // Colocando a peca "p" na posição informada no parâmetro
             this.pecas[pos.linha, pos.coluna] = p;
             p.posicao = pos;
+        }
+
+        public bool posicaoValida(Posicao pos)
+        {
+            if (pos.linha < 0 || pos.linha >= this.linhas || pos.coluna < 0 || pos.coluna >= this.colunas)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void validarPosicao(Posicao pos)
+        {
+            if (!posicaoValida(pos)) // Se a minha posicaoValida não for válida
+            {
+                throw new TabuleiroException("Posição inválida!");
+            }
         }
     }
 }
