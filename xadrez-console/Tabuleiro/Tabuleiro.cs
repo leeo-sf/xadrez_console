@@ -1,19 +1,24 @@
 ﻿namespace tabuleiro
 {
-    public class Tabuleiro
+    class Tabuleiro
     {
         // Todo tabuleiro tem linhas e colunas
-        public int linha { get; set; }
-        public int coluna { get; set; }
+        public int linhas { get; set; }
+        public int colunas { get; set; }
         // O xadrez tem uma matriz de peças
         private Peca[,] pecas;
 
         public Tabuleiro(int linhas, int colunas)
         {
-            this.linha = linhas;
-            this.coluna = colunas;
+            this.linhas = linhas;
+            this.colunas = colunas;
             // As peças tera o número de linhas pelo número de colunas informadas na construtor
             this.pecas = new Peca[linhas, colunas];
+        }
+
+        public Peca peca(int linha, int coluna) // Método que irá retornar uma peça
+        {
+            return this.pecas[linha, coluna];
         }
     }
 }

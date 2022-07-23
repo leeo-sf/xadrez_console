@@ -1,11 +1,19 @@
-﻿namespace xadrez_console
+﻿using System;
+using tabuleiro;
+
+
+namespace xadrez_console
 {
     class Program
     {
         static void Main(string[] args)
         {
 
-            Console.WriteLine("teste");
+            Tabuleiro tab = new Tabuleiro(8, 8);
+
+            Tela.imprimirTabuleiro(tab);
+
+            Console.ReadLine();
 
         }
     }
