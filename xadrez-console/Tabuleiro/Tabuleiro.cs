@@ -23,10 +23,10 @@
 
         public Peca peca(Posicao pos)
         {
-            return pecas[pos.linha, pos.coluna];
+            return this.pecas[pos.linha, pos.coluna];
         }
 
-        public bool existePeca(Posicao pos) // Checa se existe posição na determinada posição
+        public bool existePeca(Posicao pos) // Checa se existe a posição
         {
             this.validarPosicao(pos); // Caso de erro de validação de posição, irá levantar um erro
             return this.peca(pos) != null;
@@ -42,6 +42,19 @@
             // Colocando a peca "p" na posição informada no parâmetro
             this.pecas[pos.linha, pos.coluna] = p;
             p.posicao = pos;
+        }
+
+        public Peca retirarPeca(Posicao pos)
+        {
+            if (this.peca(pos) == null)
+            {
+                return null;
+            }
+            Peca aux = this.peca(pos);
+            aux.posicao = null;
+            this.pecas[pos.linha, pos.coluna] = null;
+
+            return aux;
         }
 
         public bool posicaoValida(Posicao pos)
