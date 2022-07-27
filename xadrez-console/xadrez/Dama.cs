@@ -29,7 +29,7 @@ namespace xadrez
             while (this.tab.posicaoValida(pos) && podeMover(pos))
             {
                 mat[pos.linha, pos.coluna] = true;
-                if (this.tab.peca(pos) != null && this.tab.peca(pos).cor != this.cor)
+                if (this.tab.peca(pos) != null && this.tab.peca(pos).cor != cor)
                 {
                     break;
                 }

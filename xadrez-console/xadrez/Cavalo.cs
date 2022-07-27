@@ -15,7 +15,7 @@ namespace xadrez
         private bool podeMover(Posicao pos)
         {
             Peca p = tab.peca(pos);
-            return p != null || p.cor != cor;
+            return p == null || p.cor != cor;
         }
 
         public override bool[,] movimentosPossiveis()
@@ -60,7 +60,7 @@ namespace xadrez
                 mat[pos.linha, pos.coluna] = true;
             }
             // sudo oeste
-            pos.definirValores(posicao.linha + 2, posicao.coluna + 2);
+            pos.definirValores(posicao.linha + 2, posicao.coluna + 1);
 
             if (this.tab.posicaoValida(pos) && podeMover(pos))
             {
