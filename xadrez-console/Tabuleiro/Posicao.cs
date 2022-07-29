@@ -2,7 +2,7 @@
 {
     public class Posicao
     {
-        // Uma posição de tabuleiro tem linhas e colunas
+        // Um tabuleiro tem posições (linhas e colunas)
         public int linha { get; set; }
         public int coluna { get; set; }
 

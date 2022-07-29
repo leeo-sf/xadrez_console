@@ -1,6 +1,6 @@
 ﻿namespace tabuleiro
 {
-    enum Cor
+    enum Cor // enum de cores
     {
         Branca,
         Preta,

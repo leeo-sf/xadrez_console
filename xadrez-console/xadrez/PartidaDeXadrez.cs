@@ -6,37 +6,37 @@ namespace xadrez
 {
     class PartidaDeXadrez
     {
-        public Tabuleiro tab { get; private set; }
-        public int turno { get; private set; }
-        public Cor jogadorAtual { get; private set; }
-        public bool terminada { get; private set; }
-        private HashSet<Peca> pecas;
-        private HashSet<Peca> capturadas;
-        public bool xeque { get; private set; }
-        public Peca vulneravelEnPassant { get; private set; }
+        public Tabuleiro tab { get; private set; } // um tabuleiro
+        public int turno { get; private set; } // o turno para saber em qual jogada está
+        public Cor jogadorAtual { get; private set; } // o jogador (peça preta ou peça branca)
+        public bool terminada { get; private set; } // a partida terminou ou não
+        private HashSet<Peca> pecas; // coleção de peças
+        private HashSet<Peca> capturadas; // coleção de peças que foram capturadas
+        public bool xeque { get; private set; } // está em xeque ou não
+        public Peca vulneravelEnPassant { get; private set; } // #jogadaEspecial
 
-        public PartidaDeXadrez()
+        public PartidaDeXadrez() // construtor sem argumentos
         {
-            this.tab = new Tabuleiro(8, 8);
-            this.turno = 1;
-            this.terminada = false;
-            this.xeque = false;
-            this.vulneravelEnPassant = null;
-            this.jogadorAtual = Cor.Branca;
-            this.pecas = new HashSet<Peca>();
-            this.capturadas = new HashSet<Peca>();
-            this.colocarPecas();
+            this.tab = new Tabuleiro(8, 8); // um tabuleiro de xadrez tem 8 linhas e 8 colunas
+            this.turno = 1; // inicia do turno 1
+            this.terminada = false; // a partida não está terminada (false = para não terminada)
+            this.xeque = false; // uma peça não começa em xeque
+            this.vulneravelEnPassant = null; // #jogadaEspecial
+            this.jogadorAtual = Cor.Branca; // quem começa jogando é a cor branca
+            this.pecas = new HashSet<Peca>(); // coleção de peças vazia
+            this.capturadas = new HashSet<Peca>(); // coleção de peças capturadas vazia
+            this.colocarPecas(); // já inicia colocando as peças no tabuleiro
         }
 
-        public Peca executaMovimento(Posicao origem, Posicao destino)
+        public Peca executaMovimento(Posicao origem, Posicao destino) // método para mover a peça, com (linha e coluna de origem E linha e coluna de destino)
         {
-            Peca p = tab.retirarPeca(origem);
-            p.incrementarQtdMovimentos();
-            Peca pecaCapturada = tab.retirarPeca(destino);
-            tab.colocarPeca(p, destino);
-            if (pecaCapturada != null)
+            Peca p = tab.retirarPeca(origem); // retira a peça de onde estava
+            p.incrementarQtdMovimentos(); // a peça se move 1 vez
+            Peca pecaCapturada = tab.retirarPeca(destino); // capturando uma peça que está na posição de destino
+            tab.colocarPeca(p, destino); // colocando a peça na posição de destino
+            if (pecaCapturada != null) // se tiver uma peça na posição de destino
             {
-                capturadas.Add(pecaCapturada);
+                capturadas.Add(pecaCapturada); // adiciona a peça na coleção de peças capturadas
             }
 
             // jogadaEspecial roque pequeno
@@ -81,14 +81,14 @@ namespace xadrez
             return pecaCapturada;
         }
 
-        public void desfazMovimento(Posicao origem, Posicao destino, Peca pecaCapturada)
+        public void desfazMovimento(Posicao origem, Posicao destino, Peca pecaCapturada) // desfazer o movimento de uma peça com a linha e coluna de origem, linha e coluna de destino
         {
-            Peca p = tab.retirarPeca(destino);
-            p.decrementarQtdMovimentos();
-            if (pecaCapturada != null)
+            Peca p = tab.retirarPeca(destino); // retirando a peça da posição de destino
+            p.decrementarQtdMovimentos(); // tirando 1 movimento daquela peça
+            if (pecaCapturada != null) // se capturou uma peça
             {
-                tab.colocarPeca(pecaCapturada, destino);
-                capturadas.Remove(pecaCapturada);
+                tab.colocarPeca(pecaCapturada, destino); // colocando a peça capturada na posição de destino da peça que estava se movendo
+                capturadas.Remove(pecaCapturada); // removendo a peça capturada da coleção de peças capturadas
             }
             tab.colocarPeca(p, origem);
 
@@ -132,15 +132,15 @@ namespace xadrez
             }
         }
 
-        public void realizaJogada(Posicao origem, Posicao destino)
+        public void realizaJogada(Posicao origem, Posicao destino) // método realiza jogada com linha e coluna de origem e linha e coluna de destino
         {
-            Peca pecaCapturada = executaMovimento(origem, destino);
-            Peca p = tab.peca(destino);
+            Peca pecaCapturada = executaMovimento(origem, destino); // executando o movimento de uma peça da origem para o destino
+            Peca p = tab.peca(destino); // pegando a peça
 
-            if (estaEmXeque(jogadorAtual))
+            if (estaEmXeque(jogadorAtual)) // o jogador atual está em xeque
             {
-                desfazMovimento(origem, destino, pecaCapturada);
-                throw new TabuleiroException("Você não pode se colocar em xeque!");
+                desfazMovimento(origem, destino, pecaCapturada); // desfaz o movimento da peça
+                throw new TabuleiroException("Você não pode se colocar em xeque!"); // levando uma exceção
             }
 
             // #jogadaEspecial promocao
@@ -156,7 +156,7 @@ namespace xadrez
                 }
             }
 
-            if (estaEmXeque(adversaria(jogadorAtual)))
+            if (estaEmXeque(adversaria(jogadorAtual))) // peça adversária está em xeque
             {
                 xeque = true;
             }
@@ -165,14 +165,14 @@ namespace xadrez
                 xeque = false;
             }
 
-            if (testeXequemate(adversaria(jogadorAtual)))
+            if (testeXequemate(adversaria(jogadorAtual))) // peça adversária está em xequemate
             {
-                terminada = true;
+                terminada = true; // finaliza a partida
             }
-            else
+            else // caso não esteja em xequemate
             {
-                this.turno++;
-                mudaJogador();
+                this.turno++; // incrementa 1 turno
+                mudaJogador(); // muda o jogador
             }
 
             // #jogadaEspecial en passant
@@ -187,78 +187,79 @@ namespace xadrez
 
         }
 
-        public void validarPosicaoDeOrigem(Posicao pos)
+        public void validarPosicaoDeOrigem(Posicao pos) // validando posição
         {
-            if (this.tab.peca(pos) == null)
+            if (this.tab.peca(pos) == null) // se a peça retornada for nula
             {
-                throw new TabuleiroException("Não existe peça na posição de origem escolhida!");
+                throw new TabuleiroException("Não existe peça na posição de origem escolhida!"); // levanta exceção
             }
-            if (jogadorAtual != this.tab.peca(pos).cor)
+            if (jogadorAtual != this.tab.peca(pos).cor) // se a peça retornada for diferente da cor da peça retornada
             {
-                throw new TabuleiroException("A peça de origem escolhida não é sua!");
+                throw new TabuleiroException("A peça de origem escolhida não é sua!"); // levanta exceção
             }
-            if (!this.tab.peca(pos).existeMovimentosPossiveis())
+            // (peão(1, 4) = false) irá entrar no if, pois a posição da peça não existe movimento
+            if (!this.tab.peca(pos).existeMovimentosPossiveis()) // se a peça retornada na posição não existir movimento
             {
-                throw new TabuleiroException("Não há movimentos possíveis para a peça de origem escolhida!");
+                throw new TabuleiroException("Não há movimentos possíveis para a peça de origem escolhida!"); // levanta exceção
             }
         }
 
-        public void validarPosicaoDeDestino(Posicao origem, Posicao destino)
+        public void validarPosicaoDeDestino(Posicao origem, Posicao destino) // validando posição de destino pela linha e coluna de origem e linha e coluna de destino
         {
-            if (!this.tab.peca(origem).movimentoPossivel(destino))
+            if (!this.tab.peca(origem).movimentoPossivel(destino)) // se a peça retornada na origem não existir movimento
             {
-                throw new TabuleiroException("Posição de destino inválida!");
+                throw new TabuleiroException("Posição de destino inválida!"); // levanta exceção
             }
         }
 
-        private void mudaJogador()
+        private void mudaJogador() // altera jogador
         {
-            if (this.jogadorAtual == Cor.Branca)
+            if (this.jogadorAtual == Cor.Branca) // se o jogador for branca
             {
-                this.jogadorAtual = Cor.Preta;
+                this.jogadorAtual = Cor.Preta; // se torna preta
             }
-            else
+            else // caso contrário
             {
-                this.jogadorAtual = Cor.Branca;
+                this.jogadorAtual = Cor.Branca; // o jogador se torna branca
             }
         }
 
-        public HashSet<Peca> pecasCapturadas(Cor cor)
+        public HashSet<Peca> pecasCapturadas(Cor cor) // retorna uma coleção de peças 
         {
-            HashSet<Peca> aux = new HashSet<Peca>();
-            foreach (Peca x in this.capturadas)
+            HashSet<Peca> aux = new HashSet<Peca>(); // variável para armazenar as peças capturadas
+            foreach (Peca x in this.capturadas) // para cada elemento na coleção de capturadas
             {
-                if (x.cor == cor)
+                if (x.cor == cor) // se o elemento cor for igual a cor de parametro de entrada
                 {
-                    aux.Add(x);
+                    aux.Add(x); // adiciona na variável
                 }
             }
             return aux;
         }
 
-        public HashSet<Peca> pecasEmJogo(Cor cor)
+        public HashSet<Peca> pecasEmJogo(Cor cor) // retorna uma coleção de peças
         {
-            HashSet<Peca> aux = new HashSet<Peca>();
-            foreach (Peca x in this.pecas)
+            HashSet<Peca> aux = new HashSet<Peca>(); // variável para armazenar as peças em jogo
+            foreach (Peca x in this.pecas) // para cada elemento na coleção de peças
             {
-                if (x.cor == cor)
+                if (x.cor == cor) // se o elemento cor for igual a cor de parametro de entrada
                 {
-                    aux.Add(x);
+                    aux.Add(x); // adiciona na variável
                 }
             }
             aux.ExceptWith(pecasCapturadas(cor));
             return aux;
         }
 
-        private Cor adversaria(Cor cor)
+        private Cor adversaria(Cor cor) // encontra adversário
         {
-            if (cor == Cor.Branca)
+            if (cor == Cor.Branca) // se a cor de entrada for branca
             {
-                return Cor.Preta;
+                return Cor.Preta; // o adversário é preta
             }
-            else
+            else // caso contrário
             {
-                return Cor.Branca;
+                return Cor.Branca; // o adversário é branca
             }
         }
 
@@ -323,10 +324,10 @@ namespace xadrez
             return true;
         }
 
-        public void colocarNovaPeca(char coluna, int linha, Peca peca)
+        public void colocarNovaPeca(char coluna, int linha, Peca peca) // colocando uma peça nova
         {
-            this.tab.colocarPeca(peca, new PosicaoXadrez(coluna, linha).toPosicao());
-            pecas.Add(peca);
+            this.tab.colocarPeca(peca, new PosicaoXadrez(coluna, linha).toPosicao()); // colocando uma peça na coluna e linha informada
+            pecas.Add(peca); // adicionando a peça na coleção de peças informadas
         }
 
         private void colocarPecas()
